@@ -5,6 +5,11 @@ class Collection {
         this.supported = typeof this.storage !== "undefined";
     }
 
+    /**
+     * Parses the value from the localStorage
+     * @param res
+     * @returns {boolean|number}
+     */
     parseValue(res) {
         let val;
         try {
@@ -22,6 +27,7 @@ class Collection {
                 val = window.parseFloat(val);
             }
         } catch (e) {
+            console.error("Error parsing value:", e);
             val = res;
         }
         return val;
@@ -34,6 +40,9 @@ class Collection {
      * @returns {*} - will return whatever it is you've stored in the local storage
      */
     set(value) {
+        if (typeof value !== "object") {
+            throw new TypeError("Key must be an object");
+        }
         let vaa = this.get();
         let extended = vaa ? Object.assign(vaa, value) : value;
         let saver = JSON.stringify(extended);
